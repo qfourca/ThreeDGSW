@@ -3,16 +3,18 @@ import { scene, renderer, camera } from '../init'
 export default class EasyCamera extends THREE.PerspectiveCamera{
 	constructor (FOV, size) {
 		super(FOV, size)
-		this.cameraMove = new CameraMove(this)
+		this.position.z = 1000
+
+		this.cameraMove = new CameraMove(this, 1)
 	}
 }
 
 class CameraMove {
-	constructor(camera) {
+	constructor(camera, speed) {
 		this.camera = camera
-		this._moveX = { reverse: false, run: false, speed: 0.1 }
-		this._moveY = { reverse: false, run: false, speed: 0.1 }
-		this._moveZ = { reverse: false, run: false, speed: 0.1 }
+		this._moveX = { reverse: false, run: false, speed: speed }
+		this._moveY = { reverse: false, run: false, speed: speed }
+		this._moveZ = { reverse: false, run: false, speed: speed }
 		
 	}
 	startMove(direction, reverse) {
@@ -50,14 +52,12 @@ class CameraMove {
 		}
 	}
 	rotate(pos) {
-
-		if(pos.x < 100 || pos.x > -100) {
-			this.camera.rotation.set(
-				this.camera.rotation.x - pos.y * 0.003, 
-				this.camera.rotation.y + pos.x * 0.003, 
-				0
-			)
-		}
+		this.camera.rotation.set(
+			this.camera.rotation.x - pos.y * 0.003, 
+			this.camera.rotation.y + pos.x * 0.003, 
+			0
+			
+		)
 		renderer.render(scene, camera)
 	}
 	_move(props, me) {
